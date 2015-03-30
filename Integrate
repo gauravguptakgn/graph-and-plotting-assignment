@@ -1,0 +1,50 @@
+import numpy as np
+import matplotlib.pyplot as plt
+class integrate():
+    def solve(self,f,m,ll,ul,N):
+        if m=='trapezoid':
+            a=ul-ll/float(N)
+            X=np.linspace(ll,ul,N-1)
+            return a*(f(ll)+f(ul)+2*sum(f(X)))/float(2)
+        elif m=='simpson':
+            a=float(ul-ll)/float(N)
+            sumodd=0
+            i=ll+a
+            while i<ul:
+                sumodd=sumodd+f(i)
+                i=i+2*a
+            sumeven=0
+            i=ll+2*a
+            while i<ul:
+                sumeven=sumeven+f(i)
+                i=i+2*a
+            return a*(f(ll)+f(ul)+4*sumodd+2*sumeven)/float(3)
+
+    def plot(self,f,ll,ul,N):
+        X1=np.arange(ll,ul,0.01)
+        plt.plot(X1,f(X1),'k')
+        X=np.linspace(ll,ul,N+1)
+        ymax=max(f(X))
+        ymin=min(f(X))
+        plt.vlines(X,0,f(X),'r')
+        plt.hlines(0,ll,ul,'r')
+        plt.plot(X,f(X),'r')
+        plt.xlabel('x axis')
+        plt.ylabel('y axis')
+        plt.title('Integrate')
+        plt.axis([ll-2,ul+2,ymin-2,ymax+2])
+        plt.fill_between(X,f(X),color='yellow')
+        plt.show()
+
+def function(x):
+    return x*x
+
+lowerlimit=1
+upperlimit=4
+no_interval=4
+
+igr=integrate()
+for method in ['trapezoid','simpson']:
+    solution= igr.solve(function,method,lowerlimit,upperlimit,no_interval)
+    print solution
+igr.plot(function,lowerlimit,upperlimit,no_interval)
