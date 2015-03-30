@@ -4,8 +4,8 @@ class integrate():
     def solve(self,f,m,ll,ul,N):
         if m=='trapezoid':
             a=float(ul-ll)/float(N)
-            X=np.linspace(ll+a,ul-a,N-1)
-            return a*(f(ll)+f(ul)+2*sum(f(X)))/float(2)
+            X=np.linspace(ll,ul,N+1)
+            return a*(2*sum(f(X))-f(ul)-f(ll))/float(2)
         elif m=='simpson':
             a=float(ul-ll)/float(N)
             sumodd=0
@@ -22,17 +22,18 @@ class integrate():
 
     def plot(self,f,ll,ul,N):
         X1=np.arange(ll,ul,0.01)
-        plt.plot(X1,f(X1),'k')
+        obj=plt.plot(X1,f(X1),'r')
         X=np.linspace(ll,ul,N+1)
         ymax=max(f(X))
         ymin=min(f(X))
-        plt.vlines(X,0,f(X),'r')
-        plt.hlines(0,ll,ul,'r')
-        plt.plot(X,f(X),'r')
+        plt.vlines(X,0,f(X),'k')
+        plt.hlines(0,ll,ul,'k')
+        plt.plot(X,f(X),'k')
         plt.xlabel('x axis')
         plt.ylabel('y axis')
         plt.title('Integrate')
-        plt.axis([ll-2,ul+2,ymin-2,ymax+2])
+        plt.axis([ll-1,ul+1,ymin-2,ymax+2])
+        plt.legend(obj,['function'])
         plt.fill_between(X,f(X),color='yellow')
         plt.show()
 
@@ -41,7 +42,7 @@ def function(x):
 
 lowerlimit=1
 upperlimit=4
-no_interval=100
+no_interval=3
 
 igr=integrate()
 for method in ['trapezoid','simpson']:
