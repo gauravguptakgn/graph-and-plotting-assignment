@@ -139,6 +139,16 @@ class LPsolver():
             elif d==0:
                 labels.append('{}x={}'.format(e,b[i]))
 
+        e=a[0]
+        d=a[1]
+        if e==1:e=''
+        if d==1:d=''
+        if e!=0 and d!=0:
+            title=('{}x+{}y'.format(e,d))
+        elif e==0:
+            title=('{}y'.format(d))
+        elif d==0:
+            title=('{}x'.format(e))
 
 
         plt.fill([i[0] for i in Lpcyclic],[i[1] for i in Lpcyclic],facecolor=plt.cm.gist_ncar(0.54))
@@ -199,13 +209,13 @@ class LPsolver():
             if bx[i]<l_a:
                 x[bx[i]]=arr[i,-1]
         plt.plot(x[0],x[1],'ro',markersize=8)
-        plt.text(x[0]-0.2,x[1]+0.2,'max value of objective\nfunction = {}'.format(sum([x[i]*a[i] for i in range(l_a)])))
+        plt.text(x[0]-0.2,x[1]+0.2,'max value = {}'.format(sum([x[i]*a[i] for i in range(l_a)])))
 
 
 
 
-        plt.legend(lineobj,labels,fancybox=True,shadow=True,loc='upper right')
-        plt.axis([-3,xlength+3,-3,ylength+3])
+        plt.legend(lineobj,labels,fancybox=True,shadow=True,loc='upper right',title='objective func={}'.format(title))
+        plt.axis([-3,xlength+3,-3,ylength+5])
         plt.grid(True)
         plt.show()
 
