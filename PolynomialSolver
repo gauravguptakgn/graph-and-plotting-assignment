@@ -1,0 +1,73 @@
+import matplotlib.pyplot as plt
+import numpy as np
+class PolynomialSolver():
+
+    def f(self,a,C):
+        sum=0
+        for i in range(len(C)):
+            sum=sum+C[i]*(a**i)
+        return sum
+
+    def fd(self,a,C):
+        sum=0
+        for i in range(len(C)):
+            sum=sum+i*C[i]*(a**(i-1))
+        return sum
+
+    def solve(self,C,method,l,u):
+
+        if method=='bisection':
+            while(abs(u-l)>0.001):
+                m=(u+l)/2.0
+                if self.f(l,C)*self.f(m,C)<=0:
+                    u=m
+                else:
+                    l=m
+            return [l,u]
+
+        elif method=='secant':
+            while abs(self.f(u,C))>0.001:
+                u,l=float(u-l)*self.f(u,C)/float(self.f(u,C)-self.f(l,C)),u
+            return u
+
+        elif method=='secantrf':
+            while abs(self.f(u,C))>0.001:
+                u,l=float(u-l)*self.f(u,C)/(self.f(u,C)-self.f(l,C)),u
+                while self.f(u,C)*self.f(l,C)>0:
+                    u,l=float(u-l)*self.f(u,C)/(self.f(u,C)-self.f(l,C)),u
+            return u
+
+        elif method=='newtonraphson':
+            while abs(self.f(u,C))>0.001:
+                u=self.f(u,C)/self.fd(u,C)
+            return u
+
+    def plot(self,C,l,u):
+
+        X=np.arange(l-1,u+1,0.01)
+        Y=[self.f(a,C) for a in X]
+        plt.plot(X,Y,'k')
+
+        while(abs(u-l)>0.001):
+            m=(u+l)/2.0
+            if self.f(l,C)*self.f(m,C)<=0:
+                u=m
+            else:
+                l=m
+            plt.plot(l,self.f(l,C),'bo',u,self.f(u,C),'bo')
+        plt.plot(u,self.f(u,C),'ro')
+        plt.xlabel('x axis')
+        plt.ylabel('y axis')
+        plt.title('Polynomial Solver')
+        plt.show()
+
+
+coefficients=[-1,0,1]
+lowerlimit=0
+upperlimit=5
+
+ps = PolynomialSolver()
+for method in ['bisection','secant','secantrf','newtonraphson'] :
+    solution = ps.solve(coefficients,method,lowerlimit,upperlimit)
+    print solution
+ps.plot(coefficients,lowerlimit,upperlimit)
